@@ -4,9 +4,11 @@ import VideoListEntry from './VideoListEntry.js'
 var myTest = videoData;
 
 var VideoList = (props) => {
+
   var video = props.videos.map((video) =>
     <VideoListEntry key={video.id.videoId}
-                    video={video} />
+                    video={video}
+                    onClick={props.onClick} />
   )
 
   return (
