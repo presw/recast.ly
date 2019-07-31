@@ -1,7 +1,10 @@
 import VideoList from './VideoList.js'
 import VideoListEntry from './VideoListEntry.js'
-import videoData from '../data/exampleVideoData.js'
 import VideoPlayer from './VideoPlayer.js'
+import Search from './Search.js'
+import videoData from '../data/exampleVideoData.js'
+import YOUTUBE_API_KEY from '../config/youtube.js'
+
 console.log(videoData);
 
 class App extends React.Component {
@@ -13,6 +16,18 @@ class App extends React.Component {
       videoList: videoData
     }
   }
+
+  componentDidMount() {
+    console.log('YO YO YO YO');
+    console.log(this.props.searchYouTube);
+    this.props.searchYouTube({query: 'Rick Astley - Never gonna let you down', max: 5, key: YOUTUBE_API_KEY}, (data) => {
+      console.log(data);
+      this.setState({
+        current: data[0],
+        videoList: data
+      })
+    })
+  };
 
   videoListEntryClick(e) {
     var id = e.target.id;
@@ -28,15 +43,25 @@ class App extends React.Component {
     this.setState({
       current: clickedVid
     });
-  };
+  }
+
+  handleSearchChange(e) {
+    var value = e.target.value;
+    setTimeout(() => console.log("WHAT?!"), 500)
+    // console.log("WHAT?");
+
+  }
+
+  handleSearchSubmit(e) {
+    console.log(e);
+  }
 
   render() {
-
     return (
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <div><h5><em>search</em> view goes here</h5></div>
+            <div><h5><em>search</em><Search onChange={this.handleSearchChange} onSubmit={this.handleSearchSubmit}/></h5></div>
           </div>
         </nav>
         <div className="row">
@@ -50,6 +75,7 @@ class App extends React.Component {
       </div>
     );
   }
+
 };
 
 // In the ES6 spec, files are "modules" and do not share a top-level scope

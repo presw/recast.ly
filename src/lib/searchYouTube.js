@@ -1,7 +1,7 @@
-var searchYouTube = (options, callback) => {
+var searchYouTube = (options, callback = function(){}) => {
 
   $.ajax({
-    url: `https://www.googleapis.com/youtube/v3/search?type=video&videoEmbeddable=true`,
+    url: `https://www.googleapis.com/youtube/v3/search?type=video&videoEmbeddable=true&order=relevance`,
     type: 'GET',
     data: {
       q: options.query,
