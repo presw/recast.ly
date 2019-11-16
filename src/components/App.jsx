@@ -1,14 +1,10 @@
 import VideoList from './VideoList.js';
-import VideoListEntry from './VideoListEntry.js';
 import VideoPlayer from './VideoPlayer.js';
 import Search from './Search.js';
-import videoData from '../data/exampleVideoData.js';
 import YOUTUBE_API_KEY from '../config/youtube.js';
 
-console.log(videoData);
 
 class App extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -18,36 +14,62 @@ class App extends React.Component {
     };
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
+    this.debounce = this.debounce.bind(this);
+    this.debounceSearchYouTube = this.debounce(() => console.log(this.state.searchTerm), 250).bind(this);
   }
 
   videoListEntryClick(e) {
     const { id } = e.target;
     const { videoList } = this.state;
-    let clickedVid;
+    let current = null;
     for (let i = 0; i < videoList.length; i++) {
       if (id === videoList[i].id.videoId) {
-        clickedVid = videoList[i];
+        current = videoList[i];
         break;
       }
     }
-
     this.setState({
-      current: clickedVid
+      current,
     });
   }
 
   handleSearchChange(e) {
     const { value } = e.target;
     this.setState({ searchTerm: value });
+    const { searchTerm } = this.state;
+    const { searchYouTube } = this.props;
+    this.debounceSearchYouTube(searchTerm);
+    // debounceSearchYouTube({query: `${searchTerm}`, max: 5, key: YOUTUBE_API_KEY}, (data) => {
+    //   this.setState({ searchTerm: value });
+    //   this.setState({
+    //     current: data[0],
+    //     videoList: data,
+    //   });
+    //   console.log(this.state.searchTerm);
+    // });
+  }
+
+  // Information on creating a debounce function:
+  // https://codeburst.io/throttling-and-debouncing-in-javascript-646d076d0a44
+  // https://medium.com/spritle-software/two-things-you-must-do-when-building-your-own-simple-ajax-search-64992d5c9991
+  debounce(func, delay) {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        func(...args);
+      }, delay);
+    }
   }
 
   handleSearchSubmit(e) {
     e.preventDefault();
     const { searchTerm } = this.state;
-    this.props.searchYouTube({query: `${searchTerm}`, max: 5, key: YOUTUBE_API_KEY}, (data) => {
+    const { searchYouTube } = this.props;
+    searchYouTube({query: `${searchTerm}`, max: 5, key: YOUTUBE_API_KEY}, (data) => {
       this.setState({
         current: data[0],
-        videoList: data
+        videoList: data,
       });
     });
   }

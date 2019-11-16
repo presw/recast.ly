@@ -1,6 +1,3 @@
-import VideoList from './VideoList.js';
-import App from './App.js';
-
 const VideoListEntry = (props) => (
   <div className="video-list-entry media">
     <div className="media-left media-middle">
