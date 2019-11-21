@@ -1,14 +1,19 @@
-const VideoListEntry = (props) => (
-  <div className="video-list-entry media">
-    <div className="media-left media-middle">
-      <img className="media-object" src={props.video.snippet.thumbnails.default.url} alt="" />
+const VideoListEntry = (props) => {
+  const { video } = props;
+  const { url } = video.snippet.thumbnails.default;
+  const { description, title } = video.snippet;
+  return (
+    <div className="video-list-entry media" onClick={() => props.videoListEntryClick(video)}>
+      <div className="media-left media-middle">
+        <img className="media-object" src={url} alt="" />
+      </div>
+      <div className="media-body">
+        <div className="video-list-entry-title">{title}</div>
+        <div className="video-list-entry-detail">{description}</div>
+      </div>
     </div>
-    <div className="media-body">
-      <div className="video-list-entry-title" id={props.video.id.videoId} onClick={props.onClick}>{props.video.snippet.title}</div>
-      <div className="video-list-entry-detail">{props.video.snippet.description}</div>
-    </div>
-  </div>
-);
+  );
+};
 
 // PropTypes tell other developers what `props` a component expects
 // Warnings will be shown in the console when the defined rules are violated
