@@ -8,7 +8,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: null,
+      selectedVideo: null,
       videoList: [],
       searchTerm: '',
     };
@@ -37,27 +37,17 @@ class App extends React.Component {
       const query = {query: `${searchTerm}`, max: 5, key: YOUTUBE_API_KEY};
       searchYouTube(query, (data) => {
         this.setState({
-          current: data[0],
+          selectedVideo: data[0],
           videoList: data,
         });
       });
     }
   }
 
-  videoListEntryClick(e) {
-    const { id } = e.target;
-    const { videoList } = this.state;
-    let current = null;
-    for (let i = 0; i < videoList.length; i++) {
-      if (id === videoList[i].id.videoId) {
-        current = videoList[i];
-        break;
-      }
-    }
-    this.setState({
-      current,
-    });
+  videoListEntryClick(selectedVideo) {
+    this.setState({ selectedVideo });
   }
+
 
   handleSearchChange(e) {
     const { value } = e.target;
@@ -71,7 +61,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { current } = this.state;
+    const { selectedVideo, videoList } = this.state;
     return (
       <div>
         <nav className="navbar">
@@ -81,13 +71,13 @@ class App extends React.Component {
         </nav>
         <div className="row">
           <div className="col-md-7">
-            {current ?
-              <div><h5><em>videoPlayer</em><VideoPlayer video={this.state.current} /></h5></div>
+            {selectedVideo ?
+              <div><h5><em>videoPlayer</em><VideoPlayer video={selectedVideo} /></h5></div>
               : null
             }
           </div>
           <div className="col-md-5">
-            <div><h5><em>videoList</em><VideoList onClick={this.videoListEntryClick} videos={this.state.videoList} /></h5></div>
+            <div><h5><em>videoList</em><VideoList videoListEntryClick={this.videoListEntryClick} videos={videoList} /></h5></div>
           </div>
         </div>
       </div>
