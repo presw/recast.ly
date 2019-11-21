@@ -26,7 +26,7 @@ class App extends React.Component {
       timeout = setTimeout(() => {
         func(...args);
       }, delay);
-    }
+    };
   }
 
   sendYouTubeQuery() {
@@ -64,7 +64,7 @@ class App extends React.Component {
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <div><h5><em>search</em><Search onChange={this.handleSearchChange} onHandleSubmit={this.handleSearchSubmit}/></h5></div>
+            <div><h5><em>search</em><Search handleSearchChange={this.handleSearchChange} handleSearchSubmit={this.handleSearchSubmit}/></h5></div>
           </div>
         </nav>
         <div className="row">

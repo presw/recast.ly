@@ -1,7 +1,7 @@
 const Search = (props) => (
   <div className="search-bar form-inline">
-    <form onSubmit={props.onHandleSubmit}>
-      <input className="form-control" type="text" onChange={props.onChange} />
+    <form onSubmit={props.handleSearchSubmit}>
+      <input className="form-control" type="text" onChange={props.handleSearchChange} />
       <button className="btn hidden-sm-down">
         <span className="glyphicon glyphicon-search"></span>
       </button>
