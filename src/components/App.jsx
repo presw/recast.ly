@@ -1,14 +1,10 @@
 import VideoList from './VideoList.js';
-import VideoListEntry from './VideoListEntry.js';
 import VideoPlayer from './VideoPlayer.js';
 import Search from './Search.js';
-import videoData from '../data/exampleVideoData.js';
 import YOUTUBE_API_KEY from '../config/youtube.js';
 
-console.log(videoData);
 
 class App extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -18,38 +14,60 @@ class App extends React.Component {
     };
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
+    this.videoListEntryClick = this.videoListEntryClick.bind(this);
+    this.sendYouTubeQuery = this.sendYouTubeQuery.bind(this);
+    this.debounce = this.debounce.bind(this);
+    this.debounceSearchYouTube = this.debounce(this.sendYouTubeQuery, 500).bind(this);
+  }
+
+  debounce(func, delay) {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        func(...args);
+      }, delay);
+    }
+  }
+
+  sendYouTubeQuery() {
+    const { searchTerm } = this.state;
+    if (!!searchTerm) {
+      const { searchYouTube } = this.props;
+      const query = {query: `${searchTerm}`, max: 5, key: YOUTUBE_API_KEY};
+      searchYouTube(query, (data) => {
+        this.setState({
+          current: data[0],
+          videoList: data,
+        });
+      });
+    }
   }
 
   videoListEntryClick(e) {
     const { id } = e.target;
     const { videoList } = this.state;
-    let clickedVid;
+    let current = null;
     for (let i = 0; i < videoList.length; i++) {
       if (id === videoList[i].id.videoId) {
-        clickedVid = videoList[i];
+        current = videoList[i];
         break;
       }
     }
-
     this.setState({
-      current: clickedVid
+      current,
     });
   }
 
   handleSearchChange(e) {
     const { value } = e.target;
     this.setState({ searchTerm: value });
+    this.debounceSearchYouTube();
   }
 
   handleSearchSubmit(e) {
     e.preventDefault();
-    const { searchTerm } = this.state;
-    this.props.searchYouTube({query: `${searchTerm}`, max: 5, key: YOUTUBE_API_KEY}, (data) => {
-      this.setState({
-        current: data[0],
-        videoList: data
-      });
-    });
+    this.sendYouTubeQuery();
   }
 
   render() {
@@ -65,11 +83,11 @@ class App extends React.Component {
           <div className="col-md-7">
             {current ?
               <div><h5><em>videoPlayer</em><VideoPlayer video={this.state.current} /></h5></div>
-              : <div></div>
+              : null
             }
           </div>
           <div className="col-md-5">
-            <div><h5><em>videoList</em><VideoList onClick={this.videoListEntryClick.bind(this)} videos={this.state.videoList} /></h5></div>
+            <div><h5><em>videoList</em><VideoList onClick={this.videoListEntryClick} videos={this.state.videoList} /></h5></div>
           </div>
         </div>
       </div>
