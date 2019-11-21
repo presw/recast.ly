@@ -1,17 +1,13 @@
 import VideoListEntry from './VideoListEntry.js';
 
-const VideoList = (props) => {
-
-  const video = props.videos.map((video) =>
-    <VideoListEntry key={video.id.videoId}
+const VideoList = (props) => (
+  <div className="video-list">{props.videos.map((video) =>
+    <VideoListEntry
+      key={video.id.videoId}
       video={video}
-      onClick={props.onClick} />
-  );
-
-  return (
-    <div className="video-list">{video}</div>
-  );
-};
+      videoListEntryClick={props.videoListEntryClick} />
+  )}</div>
+);
 
 // PropTypes tell other developers what `props` a component expects
 // Warnings will be shown in the console when the defined rules are violated
