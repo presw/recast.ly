@@ -3,7 +3,6 @@ import VideoPlayer from './VideoPlayer.js';
 import Search from './Search.js';
 import YOUTUBE_API_KEY from '../config/youtube.js';
 
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -47,7 +46,6 @@ class App extends React.Component {
   videoListEntryClick(selectedVideo) {
     this.setState({ selectedVideo });
   }
-
 
   handleSearchChange(e) {
     const { value } = e.target;
