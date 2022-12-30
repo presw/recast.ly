@@ -24,7 +24,7 @@
     "babel-plugin-react": "^1.0.0",
     "babel-preset-react": "^6.24.1",
     "chai": "^3.5.0",
-    "mocha": "^6.2.1",
+    "mocha": "^10.2.0",
     "sinon": "1.17.3"
   }
 }
